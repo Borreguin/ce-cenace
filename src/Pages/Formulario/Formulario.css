@@ -1,0 +1,34 @@
+.denuncia-body{
+padding-left: 4%;
+padding-right: 4%;
+}
+
+.dn-title{
+    margin-left: 10px;
+    font-weight: bolder;
+}
+
+.dn-input{
+    max-width: 250px;
+}
+
+.dn-input-ci{
+    min-width: 25%;
+}
+
+.dn-input-names{
+    min-width: 75%;
+}
+
+.dn-subtitle{
+    text-align: center;
+    font-size: 12pt;
+    font-weight: bold;
+    margin-bottom: 2px;
+    margin-top: -10px;
+}
+
+
+.dn-final{
+    text-align: center;
+}

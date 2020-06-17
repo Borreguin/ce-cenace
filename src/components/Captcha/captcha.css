@@ -1,0 +1,41 @@
+.cp-code-seccion{
+    min-height: 80px;
+    padding: 0px;
+}
+
+.cp-sc-captcha{
+    width: 50%;
+    text-align: right;
+    padding: 2px;
+    float: left;
+}
+
+.cp-sc-input{
+    width: 45%;
+    display: inline-block;
+}
+
+.so-imput{
+    width: 45%;
+}
+
+.btn-reset-captcha{
+    background-color: rgba(23, 124, 131, 0.678);
+    height: 32px;
+    width: 150px;
+    padding: 1px;
+}
+
+.cp-captcha-input{
+    margin-top: 3px;
+    align-self: center;
+    max-width: 150px;
+}
+
+.cp-ok{
+    background: rgba(72, 224, 72, 0.692);
+}
+
+.cp-fail{
+    background: rgba(236, 137, 66, 0.616);
+}

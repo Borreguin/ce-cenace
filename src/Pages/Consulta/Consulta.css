@@ -1,0 +1,38 @@
+.denuncia-body{
+padding-left: 4%;
+padding-right: 4%;
+}
+
+.cn-title{
+    margin-left: 10px;
+    font-weight: bolder;
+}
+
+.cn-input{
+    max-width: 250px;
+}
+
+.cn-input-ci{
+    min-width: 25%;
+}
+
+.cn-input-names{
+    min-width: 75%;
+}
+
+.cn-subtitle{
+    text-align: center;
+    font-size: 12pt;
+    font-weight: bold;
+    margin-bottom: 2px;
+    margin-top: -10px;
+}
+
+
+.cn-final{
+    text-align: center;
+}
+
+.btn-buscar{
+    margin-top: 7px;
+}
