@@ -36,3 +36,18 @@ padding-right: 4%;
 .btn-buscar{
     margin-top: 7px;
 }
+
+.obligatorio{
+    color: red;
+}
+
+.correo{
+    color: rgb(14, 26, 202);
+}
+
+.notify{
+    font-size: 10pt;
+    color: rgb(182, 26, 26);
+    font-style: italic;
+    margin-left: 15px;
+}

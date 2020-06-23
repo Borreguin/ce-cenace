@@ -7,7 +7,7 @@ import Home from './Home/Home'
 export const routing = (
     <Router>
       <Route exact path="/" component={Home} />
-      <Route exact path="/formulario" component={Formulario} />
-      <Route exact path="/consulta" component={Consulta} />
+      <Route path="/formulario" component={Formulario} />
+      <Route path="/consulta" component={Consulta} />
     </Router>
   )

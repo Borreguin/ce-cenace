@@ -16,23 +16,42 @@ import Captcha from "../../components/Captcha/captcha";
 export class Formulario extends Component {
   state = {
     brand: { route: "./", name: "COMITÉ DE ÉTICA DE CENACE" },
-    navData: [
-      { route: "/consulta", name: "Consultar estado de trámite" },
-    ],
+    navData: [{ route: "/consulta", name: "Consultar estado de trámite" }],
     id_forma: null,
     path: null,
     upload_files: [],
     captcha_ok: false,
+    all_is_ok: false,
     forma: {
       id_forma: "",
       ci: "",
       nombre_apellidos: "",
-      correo_electronico: "",
+      correo_electronico: "(Aún no ingresa correo electrónico válido)",
       cargo: "",
       tipo_tramite: "Denuncia",
       telefono: 0,
       detalle_tramite: "",
     },
+    valid: {
+      ci: false,
+      nombre_apellidos: false,
+      correo_electronico: false,
+      cargo: false,
+      telefono: false,
+      detalle_tramite: false,
+      captcha_ok: false
+    },
+
+    msg: {
+      ci: "",
+      nombre_apellidos: "",
+      correo_electronico: "",
+      cargo: "",
+      telefono: "",
+      detalle_tramite: "",
+      captcha_ok: "",
+      final: "Llene todos los campos requeridos para poder enviar su trámite"
+    }
   };
 
   // Esto permite conectar el boton del child (upload component)
@@ -49,53 +68,134 @@ export class Formulario extends Component {
   // Traer informacion desde el hijo:
   handle_files_change = (upload_files) => {
     this.setState({ upload_files: upload_files });
+    this._validate_all();
   };
 
   // Traer validación de captcha
   handle_captcha_change = (captcha_ok) => {
-    this.setState({ captcha_ok: captcha_ok });
+    let valid = this.state.valid;
+    valid.captcha_ok = captcha_ok
+    this.setState({ valid: valid });
+    this._validate_all();
+  };
+
+  _validate_all = () => {
+    let ok = true;
+    Object.keys(this.state.valid).forEach((key) => {
+      ok = ok && this.state.valid[key];
+    });
+    let msg = this.state.msg;
+    if (ok) {
+      msg.final = "Su trámite esta listo para ser enviado"
+    } else { 
+      msg.final = "Revise algunos campos aún no han sido llenados"
+    }
+    console.log(this.state.valid);
+    this.setState({ msg: msg, all_is_ok: ok})
   };
 
   _updateNombre = (e) => {
-    const temp = this.state.forma;
-    temp["nombre_apellidos"] = e.target.value;
-    this.setState({ forma: temp });
+    let forma = this.state.forma;
+    let valid = this.state.valid;
+    let msg = this.state.msg;
+    forma["nombre_apellidos"] = e.target.value;
+    if (e.target.value.length > 8) {
+      valid["nombre_apellidos"] = true;
+      msg.nombre_apellidos = "";
+    } else { 
+      valid["nombre_apellidos"] = false;
+      msg.nombre_apellidos = "Ingrese nombre y apellidos válidos";
+    }
+    this.setState({ forma: forma, valid: valid, msg: msg });
+    this._validate_all();
   };
 
   _updateCI = (e) => {
-    const temp = this.state.forma;
-    temp["ci"] = e.target.value;
-    this.setState({ forma: temp });
+    const forma = this.state.forma;
+    let valid = this.state.valid;
+    let msg = this.state.msg;
+    if (e.target.validity.valid && e.target.value.length === 10) {
+      forma["ci"] = e.target.value;
+      valid.ci = true;
+      msg.ci = ""
+    } else { 
+      valid.ci = false;
+      msg.ci = "Ingrese un número de cédula válido"
+    }
+    this.setState({ forma: forma, valid: valid, msg: msg });
+    this._validate_all();
   };
 
   _updateEmail = (e) => {
-    const temp = this.state.forma;
-    temp["correo_electronico"] = e.target.value;
-    this.setState({ forma: temp });
+    console.log("correo elec", e.target.validity.valid);
+    const forma = this.state.forma;
+    let valid = this.state.valid;
+    let msg = this.state.msg;
+    if (e.target.validity.valid) {
+      forma["correo_electronico"] = e.target.value;
+      valid.correo_electronico = true;
+      msg.correo_electronico = ""
+    } else { 
+      valid.correo_electronico = false;
+      msg.correo_electronico = "Ingrese un correo electrónico válido"
+    }
+    this.setState({ forma: forma, valid: valid, msg: msg });
+    this._validate_all();
   };
 
   _updateCargo = (e) => {
-    const temp = this.state.forma;
-    temp["cargo"] = e.target.value;
-    this.setState({ forma: temp });
+    let forma = this.state.forma;
+    let valid = this.state.valid;
+    let msg = this.state.msg;
+    forma.cargo = e.target.value;
+    if (e.target.value.length > 5) {
+      valid.cargo = true;
+      msg.cargo = "";
+    } else { 
+      valid.cargo = false;
+      msg.cargo = "Ingrese un cargo válido";
+    }
+    this.setState({ forma: forma, valid: valid, msg: msg });
+    this._validate_all();
   };
 
   _updateTramite = (e) => {
-    const temp = this.state.forma;
-    temp["tipo_tramite"] = e.target.value;
-    this.setState({ forma: temp });
+    const forma = this.state.forma;
+    forma["tipo_tramite"] = e.target.value;
+    this.setState({ forma: forma });
+    this._validate_all();
   };
 
   _updateDetalle = (e) => {
-    const temp = this.state.forma;
-    temp["detalle_tramite"] = e.target.value;
-    this.setState({ forma: temp });
+    const forma = this.state.forma;
+    let valid = this.state.valid;
+    let msg = this.state.msg;
+    forma["detalle_tramite"] = e.target.value;
+    if (e.target.value.length > 20) {
+      valid.detalle_tramite = true;
+      msg.detalle_tramite = "";
+    } else { 
+      valid.detalle_tramite = false;
+      msg.detalle_tramite = "Por favor especifique con detalle suficiente su trámite";
+    }
+    this.setState({ forma: forma, valid: valid, msg: msg });
+    this._validate_all();
   };
 
   _updateTelephone = (e) => {
-    const temp = this.state.forma;
-    temp["telefono"] = e.target.value;
-    this.setState({ forma: temp });
+    const forma = this.state.forma;
+    let valid = this.state.valid;
+    let msg = this.state.msg;
+    if (e.target.validity.valid && e.target.value.length === 10) {
+      forma["telefono"] = e.target.value;
+      valid.telefono = true;
+      msg.telefono = ""
+    } else { 
+      valid.telefono = false;
+      msg.telefono = "Ingrese un número de teléfono válido"
+    }
+    this.setState({ forma: forma, valid: valid, msg: msg });
+    this._validate_all();
   };
 
   async confirm_and_send() {
@@ -109,8 +209,7 @@ export class Formulario extends Component {
     let data = await response.json();
     console.log("ESTO CHECK", data);
     this.setState({ id_forma: data.id_forma });
-    let n_path =
-      "api/formularios/forma/" + this.state.id_forma + "/evidencias";
+    let n_path = "api/formularios/forma/" + this.state.id_forma + "/evidencias";
     this.setState({ path: n_path });
     this.onUpdateFile();
     // enviar mail:
@@ -145,7 +244,9 @@ export class Formulario extends Component {
           </Card.Header>
           <Card.Body className="forma-body">
             <div className="dn-subtitle">Datos Personales </div>
-            <Form.Label>Nombres y apellidos</Form.Label>
+            <Form.Label>
+              <span className="obligatorio">*</span> Nombres y apellidos <span className="notify">{this.state.msg.nombre_apellidos}</span>
+            </Form.Label>
             <Form.Control
               type="text"
               placeholder="Ingrese nombres y apellidos"
@@ -155,15 +256,22 @@ export class Formulario extends Component {
             <Form>
               <Row>
                 <Col>
-                  <Form.Label>C. de ciudadanía</Form.Label>
+                  <Form.Label>
+                    {" "}
+                    <span className="obligatorio">*</span> C. de ciudadanía <span className="notify">{this.state.msg.ci}</span>
+                  </Form.Label>
                   <Form.Control
                     type="number"
                     placeholder="Ingrese CI"
                     onChange={this._updateCI}
+                    pattern="[0-9]*"
                   />
                 </Col>
                 <Col>
-                  <Form.Label>Correo electrónico</Form.Label>
+                  <Form.Label>
+                    {" "}
+                    <span className="obligatorio">*</span> Correo electrónico <span className="notify">{this.state.msg.correo_electronico}</span>
+                  </Form.Label>
                   <Form.Control
                     type="email"
                     placeholder="Ingrese email"
@@ -176,7 +284,10 @@ export class Formulario extends Component {
             <Form>
               <Row>
                 <Col>
-                  <Form.Label>Cargo</Form.Label>
+                  <Form.Label>
+                    {" "}
+                    <span className="obligatorio">*</span> Cargo <span className="notify">{this.state.msg.cargo}</span>
+                  </Form.Label>
                   <Form.Control
                     type="text"
                     placeholder="Cargo del funcionario"
@@ -184,7 +295,9 @@ export class Formulario extends Component {
                   />
                 </Col>
                 <Col>
-                  <Form.Label>Teléfono</Form.Label>
+                  <Form.Label>
+                    <span className="obligatorio">*</span> Teléfono <span className="notify">{this.state.msg.telefono}</span>
+                  </Form.Label>
                   <Form.Control
                     type="text"
                     placeholder="Ingrese teléfono de contacto"
@@ -194,8 +307,10 @@ export class Formulario extends Component {
               </Row>
             </Form>
             <br></br>
-            <div className="dn-subtitle">Detalles del Requerimiento </div>
-            <Form.Label>Tipo de trámite</Form.Label>
+            <div className="dn-subtitle">Detalles del Requerimiento</div>
+            <Form.Label>
+              <span className="obligatorio">*</span> Tipo de trámite
+            </Form.Label>
             <Form.Control
               as="select"
               placeholder="Seleccione"
@@ -208,7 +323,8 @@ export class Formulario extends Component {
               <option>Solicitud de autorización</option>
             </Form.Control>
             <Form.Label>
-              Ingrese con claridad los detalles de su trámite
+              <span className="obligatorio">*</span> Ingrese con claridad los
+              detalles de su trámite    <span className="notify">{this.state.msg.detalle_tramite}</span>
             </Form.Label>
             <Form.Control
               as="textarea"
@@ -229,13 +345,28 @@ export class Formulario extends Component {
             <br></br>
             <Form.Group>
               <Form.Label>
-                Presione "Enviar" si está de acuerdo con los datos ingresados:
+                Los campos marcados con asterisco (
+                <span className="obligatorio">*</span>) son de caracter
+                obligatorio, asegurese de llenar todos los campos. Al presionar
+                "Enviar" usted está de acuerdo con todos los datos ingresados.
+                Un correo electrónico de confirmación será enviado al siguiente
+                correo:
+                <span className="correo">
+                  {" "}
+                  {this.state.forma.correo_electronico}{" "}
+                </span>
               </Form.Label>
+              <p></p>
               <div className="dn-final">
-                <Button onClick={() => this.confirm_and_send()}>
+                <Button
+                  onClick={() => this.confirm_and_send()}
+                  variant="warning"
+                  disabled={!this.state.all_is_ok}
+                >
                   {" "}
                   Enviar{" "}
                 </Button>
+                <div>{this.state.msg.final}</div>
               </div>
             </Form.Group>
           </Card.Body>
